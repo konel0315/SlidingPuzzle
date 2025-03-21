@@ -1,0 +1,143 @@
+#include <time.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <list>
+#include <iostream>
+#include <vector>
+using namespace std;
+
+void printA(int **arr,int n) {
+    for (int i = 0;i < n;i++) {
+        for (int j = 0;j < n;j++) {
+            int k = arr[i][j];
+            if (k > 9) {
+                cout << k << " ";
+            }
+            else if (k <= 9) { cout << " " << k << " "; }
+        }
+        cout << "\n";
+    }
+}
+
+bool corA(int** arr, int n) {
+    int p = 1;  // 1부터 시작
+    for (int i = 0; i < n; i++) {
+        for (int j = 0; j < n; j++) {
+            if (arr[i][j] != p) {
+                return false;  // 원하는 값이 아니면 바로 false 반환
+            }
+            if (p == n*n - 1) {
+                p = 0;  // p가 n-1이면 0으로 리셋
+            }
+            else {
+                p++;  // p가 n-1이 아니면 1 증가
+            }
+        }
+    }
+    cout << "성공";
+    return true;  // 모든 값이 조건을 만족하면 true 반환
+}
+
+
+int main() {
+    int num;
+    int impoX, impoY;
+   
+
+    int n = 0;
+    while (n <= 0) {
+        cout << "n을 입력하세요";
+        cin >> n;
+        if (n <= 0) {
+            cout << "n은 1이상이여야 합니다";
+
+        }
+        if (n > 0) { system("cls"); }
+    }
+    //list<int> RanL;
+    //for (int i = 0;i < n * n;i++)
+    //{
+    //    RanL.push_back(i);//연결리스트 n제곱개의 수가 들어감(0부터 n^2-1)
+    //}연결리스트의 경우
+
+    vector<int> RanL;
+    for (int i = 0;i < n * n;i++) {
+        RanL.push_back(i);
+    }
+
+    int** arr = new int* [n];
+    for (int i = 0;i < n;i++) {
+        arr[i] = new int[n];
+    }//2d 배열 생성
+
+
+
+    srand(time(0));//랜덤 2d로 바꾸는 과정
+
+
+    for (int i = 0;i < n;i++) {
+        for (int j = 0;j < n;j++) {
+            int p = RanL.size();
+            num = rand() % p;
+            /*list<int>::iterator cur = RanL.begin();
+            advance(cur, num);
+
+            arr[i][j] = *cur;
+            if (*cur == 0) { impoX = j;impoY = i; }
+            RanL.erase(cur);*///연결리스트의경우
+            arr[i][j] = RanL[num];
+            if (RanL[num] == 0) { impoX = j;impoY = i; }
+            RanL.erase(RanL.begin() + num);
+        }
+    }
+    
+    printA(arr, n);
+    do
+    {
+        
+        char c;int m;
+        cin >> c;
+        switch (c)
+        {
+        case 'w':
+            if (impoY != 0) {
+                m = arr[impoY - 1][impoX];
+                arr[impoY][impoX] = m;
+                arr[impoY - 1][impoX] = 0;
+                impoY--;
+
+            }system("cls");
+            printA(arr, n);
+            break;
+        case 's':
+
+            if (impoY != n - 1) {
+                m = arr[impoY + 1][impoX];
+                arr[impoY][impoX] = m;
+                arr[impoY + 1][impoX] = 0;
+                impoY++;
+            }
+            system("cls");
+            printA(arr, n);
+            break;
+        case 'd':
+            if (impoX != n - 1) {
+                m = arr[impoY][impoX + 1];
+                arr[impoY][impoX] = m;
+                arr[impoY][impoX + 1] = 0;
+                impoX++;
+            }system("cls");
+            printA(arr, n);
+            break;
+        case 'a':
+            if (impoX != 0) {
+                m = arr[impoY][impoX - 1];
+                arr[impoY][impoX] = m;
+                arr[impoY][impoX - 1] = 0;
+                impoX--;
+            }system("cls");
+            printA(arr, n);
+            break;
+        }
+    }while (corA(arr, n) == false);
+}
